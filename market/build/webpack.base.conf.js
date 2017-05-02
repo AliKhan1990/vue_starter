@@ -1,8 +1,9 @@
-var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+let path = require('path')
+let utils = require('./utils')
+let config = require('../config')
+let vueLoaderConfig = require('./vue-loader.conf')
 
+//定向函数
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -21,8 +22,11 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
+      //别名
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
+      'components':resolve('/src/components'),
+      'common':resolve('/src/common'),
     }
   },
   module: {
