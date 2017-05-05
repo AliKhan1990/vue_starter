@@ -1,6 +1,7 @@
 let path = require('path')
 let utils = require('./utils')
 let config = require('../config')
+let fileloader = require("file-loader");
 let vueLoaderConfig = require('./vue-loader.conf')
 
 //定向函数
@@ -26,7 +27,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'components':resolve('/src/components'),
-      'common':resolve('/src/common'),
+      'common':resolve('/src/common')
     }
   },
   module: {
