@@ -1,15 +1,15 @@
-let path = require('path')
-let utils = require('./utils')
-let config = require('../config')
-let fileloader = require("file-loader");
-let vueLoaderConfig = require('./vue-loader.conf')
+const path = require('path')
+const utils = require('./utils')
+const config = require('../config')
+const fileloader = require("file-loader");
+const vuxLoader = require('vux-loader')
+const vueLoaderConfig = require('./vue-loader.conf')
+const merge = require('webpack-merge')
 
-//定向函数
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
-
-module.exports = {
+const webpackConfig = module.exports = {// 原来的 module.exports 代码赋值给变量 webpackConfig
   entry: {
     app: './src/main.js'
   },
@@ -23,12 +23,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      //别名
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      'components':resolve('/src/components'),
-      'common':resolve('/src/common')
-    }
+      'components': resolve('/src/components'),
+      'common': resolve('/src/common')
+    },
+    enforceExtension:false
   },
   module: {
     rules: [
@@ -70,3 +70,7 @@ module.exports = {
     ]
   }
 }
+
+module.exports = vuxLoader.merge(webpackConfig, {
+  plugins: ['vux-ui']
+})

@@ -1,7 +1,7 @@
 <template>
   <div class="tab-view">
     <div class="tab border-1px">
-      <div class="tab-item">
+      <div class="tab-item tab-active">
         <router-link to="/goods">商品</router-link>
       </div>
       <div class="tab-item">
@@ -21,7 +21,6 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin.styl"
-
   .tab
     display flex
     width 100%

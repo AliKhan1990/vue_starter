@@ -68,17 +68,6 @@ import {
   Message
 } from 'element-ui'
 
-import Vue from 'vue';
-import App from './App';
-import VueRouter from 'vue-router';
-import VueResource from 'vue-resource';
-
-//Open debug mode
-Vue.config.debug = true;
-
-//依赖
-Vue.use(VueRouter);
-Vue.use(VueResource);
 Vue.use(elementUI);
 Vue.use(Pagination)
 Vue.use(Dialog)
@@ -148,6 +137,22 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$prompt = MessageBox.prompt
 Vue.prototype.$notify = Notification
 Vue.prototype.$message = Message
+//----end------
+
+import App from './App';
+import VueRouter from 'vue-router';
+import Vuex from 'vuex';
+import Vue from 'vue';
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios, axios)
+//Open debug mode
+Vue.config.debug = true;
+
+//依赖
+Vue.use(VueRouter);
+Vue.use(Vuex);
 
 // 0. 如果使用模块化机制编程，導入Vue和VueRouter，要调用 Vue.use(VueRouter)
 
@@ -165,6 +170,7 @@ import 'common/stylus/index.styl';
 // 或者，只是一个组件配置对象。
 // 我们晚点再讨论嵌套路由。
 let routes = [
+  {path:'/*',component: goods},
   { path: '/goods', component: goods },
   { path: '/ratings', component: ratings },
   { path: '/seller', component: seller },
@@ -186,3 +192,5 @@ const app = new Vue({
 }).$mount('#app');
 
 // 现在，应用已经启动了！
+const FastClick = require('fastclick')
+FastClick.attach(document.body)

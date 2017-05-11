@@ -21,7 +21,7 @@
         <span class="count"  @click="showDetail">
           {{seller.supports.length}}
         </span>
-        <i class="iconfont vfont-xiayiye"></i>
+        <span class="el-icon-arrow-right"></span>
       </div>
     </div>
     <div class="bulletin-wrap" @click="showDetail">
@@ -86,18 +86,7 @@
     created(){
       this.idx = 0;
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
-    },
-//    mounted(){
-//      this.infoLen = this.seller.supports.length;
-//      setInterval(() => {
-//        if (this.idx == this.infoLen - 1) {
-//          this.idx = 0;
-//        } else {
-//          this.idx++;
-//        }
-//      }, 1000);
-//      console.log(this.seller, this.idx);
-//    }
+    }
   }
 </script>
 <style lang="stylus" rel="stylesheet/style">
@@ -182,7 +171,7 @@
         text-align: center
         .count
           font-size .2rem
-        .iconfont
+        .el-icon-arrow-right
           font-size .2rem
 
     .bulletin-wrap
@@ -269,9 +258,14 @@
           .privilege .privilege-list,.notice .text
               list-style none
               text-align left
-              margin-left .45rem
+              padding-left .225rem
+              padding-right .225rem
           .privilege
             .privilege-list
+              margin: 0 auto;
+              margin-bottom: 0.7rem;
+              margin-left: 1rem;
+              width 5.5rem
               li
                 line-height .5rem
               .support
