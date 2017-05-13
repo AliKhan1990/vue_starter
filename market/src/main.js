@@ -1,7 +1,10 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 // 如果在一个模块化工程中使用它，必须要通过 Vue.use() 明确地安装路由功能：
+import VueTouch from 'vue-touch'
+Vue.use(VueTouch, {name: 'v-touch'})
 //Import Element-UI
+import VueScroller from 'vue-scroller';
 import elementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css';
 import {
@@ -67,7 +70,7 @@ import {
   MessageBox,
   Message
 } from 'element-ui'
-
+Vue.use(VueScroller);
 Vue.use(elementUI);
 Vue.use(Pagination)
 Vue.use(Dialog)
@@ -170,7 +173,7 @@ import 'common/stylus/index.styl';
 // 或者，只是一个组件配置对象。
 // 我们晚点再讨论嵌套路由。
 let routes = [
-  {path:'/*',component: goods},
+  {path:'/',redirect: '/goods'},
   { path: '/goods', component: goods },
   { path: '/ratings', component: ratings },
   { path: '/seller', component: seller },
@@ -188,7 +191,7 @@ const router = new VueRouter({
 // 从而让整个应用都有路由功能
 const app = new Vue({
   router,
-  render:r => r(App)
+  render:h => h(App)
 }).$mount('#app');
 
 // 现在，应用已经启动了！

@@ -6,13 +6,14 @@
 </template>
 
 <script>
-  import header from './components/header/header.vue';
-  import tab from './components/tab/tab.vue';
+  import header from './components/header/header';
+  import tab from './components/tab/tab';
   const ERR_OK = 0;
   export default{
     data(){
       return {
-        seller: {}
+        seller: {},
+        headerHeight:0
       }
     },
     created(){
@@ -23,9 +24,15 @@
         }
       });
     },
+    mounted(){
+
+    },
     components: {
       "v-header": header,
       "v-tab": tab
+    },
+    methods:{
+
     }
   }
 </script>

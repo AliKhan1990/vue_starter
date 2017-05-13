@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" ref="header">
     <div class="content-wrap">
       <div class="avatar">
         <img :src="seller.avatar" alt="">
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div v-if="seller.supports" class="support-content">
-        <span class="count"  @click="showDetail">
+        <span class="count" @click="showDetail">
           {{seller.supports.length}}
         </span>
         <span class="el-icon-arrow-right"></span>
@@ -28,7 +28,7 @@
         <span class="bulletin-title">
           <span class="bulletin"></span>
         </span>
-      <span v-if="seller.bulletin" class="bulletin-text">{{seller.bulletin.substr(0,20)+"..."}}</span>
+      <span v-if="seller.bulletin" class="bulletin-text">{{seller.bulletin.substr(0, 20) + "..."}}</span>
       <span class="el-icon-arrow-right"></span>
     </div>
     <div class="bk">
@@ -70,37 +70,52 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import bus from '../../assets/eventBus';
   export default{
     props: ['seller'],
     data(){
-        return{
-            detailShow:false,
-            radio:1
-        }
+      return {
+        detailShow: false,
+        radio: 1,
+        headerHeight: 10
+      }
     },
-    methods:{
-        showDetail(){
-          this.detailShow = !this.detailShow;
-        }
+    methods: {
+      showDetail(){
+        this.detailShow = !this.detailShow;
+      },
+      sendHeaderHeight(){
+        let self = this;
+        this.headerHeight = this.$refs.header.clientHeight;
+        bus.$emit("headerHeightEvent", self.headerHeight);
+      }
     },
     created(){
       this.idx = 0;
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+    },
+    mounted(){
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.sendHeaderHeight();
+        }, 0)
+      })
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/style">
   @import "../../common/stylus/mixin";
-  body{
-    font-size:.16rem
+  body {
+    font-size: .16rem
   }
+
   .header
     position: relative
     overflow: hidden
     color #fff
     background #999
     .content-wrap
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       position: relative;
       z-index: 20;
       padding .48rem .24rem .36rem .48rem
@@ -222,7 +237,7 @@
       top 0
       left 0
       overflow auto
-      background rgba(7,17,27,0.8)
+      background rgba(7, 17, 27, 0.8)
       .detail-wrap
         text-align center
         .dt-main
@@ -230,36 +245,36 @@
             font-size .3rem
             text-align center
             margin-top 1.28rem
-          .rateBox{
+          .rateBox {
             margin-top .4rem
             margin-bottom: 0.5rem;
           }
-          .privilege .privilege-title,.notice .notice-title
+          .privilege .privilege-title, .notice .notice-title
             margin-bottom .45rem
             font-size .28rem
             margin-top 0
             position relative
             &:before
-              content: '';                 /*CSS伪类用法*/
-              position: absolute;         /*定位背景横线的位置*/
+              content: ''; /*CSS伪类用法*/
+              position: absolute; /*定位背景横线的位置*/
               top: 45%;
-              background: rgba(255,255,255,.7);       /*宽和高做出来的背景横线*/
+              background: rgba(255, 255, 255, .7); /*宽和高做出来的背景横线*/
               width: 2rem;
               height: 1px;
               left 15%
             &:after
-              content: '';                 /*CSS伪类用法*/
-              position: absolute;         /*定位背景横线的位置*/
+              content: ''; /*CSS伪类用法*/
+              position: absolute; /*定位背景横线的位置*/
               top: 45%;
-              background: rgba(255,255,255,.7);       /*宽和高做出来的背景横线*/
+              background: rgba(255, 255, 255, .7); /*宽和高做出来的背景横线*/
               width: 2rem;
               height: 1px;
               right 15%
-          .privilege .privilege-list,.notice .text
-              list-style none
-              text-align left
-              padding-left .225rem
-              padding-right .225rem
+          .privilege .privilege-list, .notice .text
+            list-style none
+            text-align left
+            padding-left .225rem
+            padding-right .225rem
           .privilege
             .privilege-list
               margin: 0 auto;

@@ -1,6 +1,6 @@
 <template>
   <div class="tab-view">
-    <div class="tab border-1px">
+    <div class="tab border-1px" ref="tab">
       <div class="tab-item tab-active">
         <router-link to="/goods">商品</router-link>
       </div>
@@ -16,7 +16,26 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{}
+  import eventBus from '../../assets/eventBus';
+  export default{
+    data(){
+      return {
+        tabsHeight: 0
+      }
+    },
+    methods: {
+      sendTabsHeight(){
+        let self = this;
+        this.tabsHeight = this.$refs.tab.clientHeight;
+        eventBus.$emit("sendFromTabs", self.tabsHeight);
+        //console.log("tab" + this.tabsHeight);
+      }
+    },
+    mounted(){
+
+      this.sendTabsHeight();
+    }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -27,13 +46,15 @@
     height .85rem
     line-height .85rem
     font-size .25rem
-    border-1px(rgba(7,17,27,0.1));
+    border-1px(rgba(7, 17, 27, 0.1));
     .tab-item
       flex 1
       text-align center
       & > a
         display block
         text-decoration none
-        &:hover,&.tab-active{ color:deepskyblue }
+        &:hover, &.tab-active {
+          color: deepskyblue
+        }
 
 </style>
