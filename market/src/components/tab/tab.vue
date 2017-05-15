@@ -11,7 +11,7 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <router-view keep-live :seller="seller"></router-view>
   </div>
 </template>
 
@@ -22,6 +22,9 @@
       return {
         tabsHeight: 0
       }
+    },
+    props:{
+      seller:[Object]
     },
     methods: {
       sendTabsHeight(){

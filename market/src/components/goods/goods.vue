@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="5" class="menu-wrap">
-      <scroller class="grid-content" ref="menuScroller">
+      <scroller class="grid-content" ref="menuScroller" lock-x :height="otherHeightCal+'px'">
         <ul class="kinds-list">
           <li class="list-item" v-if="goods" v-for="(item,index) in goods"
               :class="{'current':currentIdx===index}"
@@ -14,7 +14,7 @@
       </scroller>
     </el-col>
     <el-col :span="19" class="foods-wrapper">
-      <scroller class="grid-content" ref="foodScroller">
+      <scroller class="grid-content" ref="foodScroller" @on-scroll="fsScroll" lock-x :scrollbarY='true'>
         <ul class="goods-list">
           <li class="good" ref="goodHook" v-for="item in goods">
             <h1 class="title">{{item.name}}</h1>
@@ -44,16 +44,20 @@
         </ul>
       </scroller>
     </el-col>
-    <buy-cart></buy-cart>
+    <buy-cart :seller="seller" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></buy-cart>
   </el-row>
 </template>
 <script type="text/ecmascript-6">
   import buyCart from 'components/buycart/buycart';
+  import {Scroller} from 'vux';
   const ERR_OK = 0;
   export default{
-    prop: ['seller', 'headerHeight'],
+    props: {
+      seller: Object
+    },
     components: {
-      buyCart
+      buyCart,
+      Scroller
     },
     data(){
       return {
@@ -71,20 +75,24 @@
           this.goods = res.data;
           this.$nextTick(() => {
             //等待渲染完毕开始重置及计算
-            setTimeout(()=>{
+            setTimeout(() => {
               this._calculateHeight()
-            },100)
+              this._initScroll()
+            }, 100)
           })
         }
       })
     },
     mounted(){
-      this._initScroll()
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this._initScroll()
+        }, 100)
+      })
     },
     methods: {
-      fsScroll(){
-        this.scrollTop = this.$refs.foodScroller.getPosition().top;
-        console.log(this.scrollTop);
+      fsScroll(pos){
+        this.scrollTop = pos.top;
       },
       _calculateHeight(){
         let goodList = this.$refs.goodHook;
@@ -95,14 +103,20 @@
         }
       },
       _initScroll(){
-        this.$refs.foodScroller.resize()
+        this.$refs.menuScroller.reset({top: 0})
+        this.$refs.foodScroller.reset({top: 0})
       },
       listClick(index){
-        this.$refs.foodScroller.scrollTo(0,this.listHeight[index],true)
+        this.$refs.foodScroller.reset({top: this.listHeight[index]})
+        this.scrollTop = this.listHeight[index];
       }
     },
     computed: {
+      otherHeightCal(){
+          return (window.screen.width /7.5 * 8.8)
+      },
       currentIdx(){
+        //因为有过渡动效,所以scrollTop计算会有延迟
         for (let i = 0; i < this.listHeight.length; i++) {
           let heightF = this.listHeight[i];
           let heightN = this.listHeight[i + 1];

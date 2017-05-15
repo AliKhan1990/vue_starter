@@ -1,16 +1,18 @@
 <template>
   <div class="goods-footer" ref="footer">
     <div class="cart">
-      <div class="cart-icon">
+      <el-badge :value="totalCount"
+                class="item cart-icon"
+                :class="{'cartHt':totalCount>0}">
         <i class="iconfont vfont-gouwuche"></i>
-      </div>
-      <span class="cart-total">¥0</span>
+      </el-badge>
+      <span class="cart-total">¥{{totalPrice}}</span>
     </div>
     <div class="others">
-      另需配送费¥4元
+      另需配送费¥{{deliveryPrice}}元
     </div>
-    <div class="total-price">
-      ¥20起送
+    <div class="total-price" :class="{'payment':payClass==1}">
+      {{payDesc}}
     </div>
   </div>
 </template>
@@ -23,16 +25,61 @@
         cartHeight: 0
       }
     },
-    methods: {
-      buycartHeight(){
-          let self = this;
-        this.cartHeight = this.$refs.footer.clientHeight;
-        eventBus.$emit("sendFromCart", self.cartHeight);
-        //console.log('购物车'+this.cartHeight);
+    props: {
+      selectedFoods: {
+        type: Array,
+        default(){
+          return [
+            {
+              price: 30,
+              count: 2
+            }
+          ]
+        }
+      },
+      deliveryPrice: {
+        type: [Number],
+        default: 0
+      },
+      minPrice: {
+        type: [Number],
+        default: 0
       }
     },
-    mounted(){
-      this.buycartHeight();
+    methods: {},
+    computed: {
+      totalPrice(){
+        let total = 0;
+        this.selectedFoods.forEach((food) => {
+          total += food.price * food.count;
+        })
+        return total;
+      },
+      totalCount(){
+        let count = 0
+        this.selectedFoods.forEach((food) => {
+          count += food.count;
+        })
+        return count;
+      },
+      payDesc(){
+        console.log(this.totalPrice, this.minPrice);
+        if (this.totalPrice === 0) {
+          return `¥ ${this.minPrice}元起送`
+        } else if (this.tatolPrice < this.minPrice) {
+          let diff = this.minPrice - this.totalPrice;
+          return `还差¥${diff}元起送！`
+        } else {
+          return "去结算"
+        }
+      },
+      payClass(){
+        if(this.tatolPrice < this.minPrice) {
+          return 0
+        } else {
+          return 1
+        }
+      }
     }
   }
 </script>
@@ -47,13 +94,21 @@
     height 1rem
     background #141d27
     .cart
+      display: flex;
+      .el-badge
+        sup
+          right .3rem
+          top .1rem
       .cart-icon
+        &.cartHt{
+          background indianred
+        }
         width: 1.2rem;
         height: 1.2rem;
         position relative
         display inline-block
         top: -0.4rem;
-        left: 0.5rem;
+        left: 0.1rem;
         border-radius: 50%;
         color: rgb(255, 255, 255, .4)
         font-size .48rem
@@ -83,8 +138,12 @@
       line-height 1rem
       padding 0 .44rem
     .total-price
+      &.payment{
+        background indianred
+        color: #fff
+      }
       height: 100%
-      width 2rem
+      width 2.01rem
       font-size .24rem
       color rgba(255, 255, 255, 0.4)
       font-weight 700rem

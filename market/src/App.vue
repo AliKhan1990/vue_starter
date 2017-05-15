@@ -1,19 +1,22 @@
 <template>
   <div id="view">
-    <v-header :seller="seller"></v-header>
-    <v-tab></v-tab>
+    <v-intro v-on:enter="closeIntro" v-show="!intro"></v-intro>
+    <v-header v-show="intro" :seller="seller"></v-header>
+    <v-tab v-show="intro" :seller="seller"></v-tab>
   </div>
 </template>
 
 <script>
   import header from './components/header/header';
   import tab from './components/tab/tab';
+  import intro from './components/introduction/introduction'
   const ERR_OK = 0;
   export default{
     data(){
       return {
         seller: {},
-        headerHeight:0
+        headerHeight:0,
+        intro:true
       }
     },
     created(){
@@ -29,15 +32,21 @@
     },
     components: {
       "v-header": header,
-      "v-tab": tab
+      "v-tab": tab,
+      'v-intro':intro
     },
     methods:{
-
+      closeIntro(){
+          this.intro = false
+      }
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/style">
   @import "common/stylus/index.styl";
+</style>
+<style lang="less">
+  @import '~vux/src/styles/reset.less';
 </style>
 
