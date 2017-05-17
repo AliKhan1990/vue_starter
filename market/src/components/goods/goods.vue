@@ -109,7 +109,7 @@
       _drop(target) {
         // 体验优化,异步执行下落动画
         this.$nextTick(() => {
-          //ref自带它组件下的属性与方法
+          //ref自带它组件闲的
           this.$refs.buyCart.drop(target);
         });
       },

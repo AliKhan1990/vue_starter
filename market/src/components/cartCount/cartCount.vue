@@ -30,7 +30,6 @@
         } else {
           this.food.count++;
         }
-        //触发add函数
         this.$emit('add', event.target)
       }
     }

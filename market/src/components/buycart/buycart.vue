@@ -1,28 +1,73 @@
 <template>
-  <div class="goods-footer" ref="footer">
-    <div class="cart">
-      <el-badge :value="totalCount"
-                class="item cart-icon"
-                :class="{'cartHt':totalCount>0}">
-        <i class="iconfont vfont-gouwuche"></i>
-      </el-badge>
-      <span class="cart-total">¥{{totalPrice}}</span>
-    </div>
-    <div class="others">
-      另需配送费¥{{deliveryPrice}}元
-    </div>
-    <div class="total-price" :class="{'payment':payClass==1}">
-      {{payDesc}}
-    </div>
-    <div class="ball-wrap">
-      <div v-for="ball in balls">
-        <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
-          <div class="ball" v-show="ball.show">
-            <div class="inner inner-hook"></div>
-          </div>
-        </transition>
+  <div class="cart-wrapper">
+    <div class="goods-footer" ref="footer">
+      <div class="front" @click="toggleList">
+        <div class="cart">
+          <el-badge :value="totalCount"
+                    class="item cart-icon"
+                    :class="{'cartHt':totalCount>0}">
+            <i class="iconfont vfont-gouwuche"></i>
+          </el-badge>
+          <span class="cart-total">¥{{totalPrice}}</span>
+        </div>
+        <div class="others">
+          另需配送费¥{{deliveryPrice}}元
+        </div>
+      </div>
+      <div class="total-price" :class="{'payment':payClass==1}">
+        {{payDesc}}
+      </div>
+      <div class="ball-wrap">
+        <div v-for="ball in balls">
+          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+            <div class="ball" v-show="ball.show">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
+    <transition name="cartList">
+      <div class="shopcart-list" v-show="listFold">
+        <el-table
+          :data="galaxyFoods"
+          stripe
+          border
+          style="width: 100%"
+          empty-text="购物车空空如也～😢"
+          maxHeight="200"
+          @header-click='cleanCart'
+        >
+          <el-table-column
+            label="商品列表"
+            width="200"
+            column-key="list"
+          >
+            <!--item-->
+            <template scope="scope">
+              <div class="food" v-if="scope.row.count
+              && scope.row.count!=0
+              && scope.row.count!==undefined ">
+                <span class="name">{{scope.row.name}}</span>
+                <div class="price">¥{{scope.row.price}}</div>
+              </div>
+            </template>
+          </el-table-column>
+          <!--ctrl-->
+          <el-table-column
+            label="清空"
+            width="120"
+            column-key="clean">
+            <template scope="scope">
+              <cartCount v-if="scope.row.count
+                               && scope.row.count!=0
+                               && scope.row.count!==undefined"
+                         :food="scope.row"></cartCount>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -62,7 +107,8 @@
           {show: false},
           {show: false}
         ],
-        dropBalls: []
+        dropBalls: [],
+        listFold: false
       }
     },
     methods: {
@@ -115,9 +161,35 @@
           ball.show = false;
           el.style.display = 'none';
         }
+      },
+      toggleList(){
+        if (this.totalCount != undefined) {
+          this.listFold = !this.listFold;
+        }
+      },
+      cleanCart(column){
+        if(column.columnKey=='clean'){
+         this.selectedFoods.forEach((food)=>{
+             food.count = 0;
+         })
+        }
       }
     },
     computed: {
+      galaxyFoods(){
+        let noFilter = this.selectedFoods
+        let filter = [];
+        noFilter.forEach((food) => {
+          if (food.count) {
+            filter.push(food);
+          } else {
+            return;
+          }
+        })
+        console.log(filter);
+        return filter;
+
+      },
       totalPrice(){
         let total = 0;
         this.selectedFoods.forEach((food) => {
@@ -153,11 +225,15 @@
           return 1
         }
       }
+
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  cart-wrapper
+    position relative
+
   .goods-footer
     display flex
     position fixed
@@ -167,6 +243,8 @@
     height 1rem
     background #141d27
     z-index 50
+    .front
+      display flex
     .cart
       display: flex;
       .el-badge
@@ -230,7 +308,7 @@
         left: 32px
         bottom: 22px
         z-index: 200
-        transition: all 0.4s cubic-bezier(.33,1.01,.93,-0.04)
+        transition: all 0.4s cubic-bezier(.33, 1.01, .93, -0.04)
         .inner
           width: 16px
           height: 16px
@@ -238,5 +316,29 @@
           background: rgb(0, 160, 220)
           transition: all 0.4s linear
 
+  .shopcart-list
+    width 100%
+    position fixed
+    bottom 1rem
+    .el-table__body-wrapper .el-table_1_column_2 .cell {
+      padding-right 0
+    }
+    .food
+      display flex
+
+  /*购物和列表动画*/
+  .cartList-enter-active {
+    transition all .3 ease;
+  }
+
+  .cartList-enter-active {
+    transition: all .3s cubic-bezier(.8, .11, .83, .67);
+  }
+
+  .cartList-enter, .cartList-leave-active {
+    transition all .3s
+    transform: translateY(10px);
+    opacity: 0;
+  }
 
 </style>
