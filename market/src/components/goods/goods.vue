@@ -36,7 +36,9 @@
                         <span class="rmb">¥</span>{{food.oldPrice}}
                       </span>
                   </div>
-                  <!--<span class="el-icon-plus"></span>-->
+                  <div class="count-wrap">
+                    <cartCount @add="addFood" :food="food"></cartCount>
+                  </div>
                 </div>
               </li>
             </ul>
@@ -44,12 +46,17 @@
         </ul>
       </scroller>
     </el-col>
-    <buy-cart :seller="seller" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></buy-cart>
+    <buy-cart ref="buyCart" :selected-foods='selectedFoods'
+              :seller="seller"
+              :delivery-price="seller.deliveryPrice"
+              :min-price="seller.minPrice">
+    </buy-cart>
   </el-row>
 </template>
 <script type="text/ecmascript-6">
-  import buyCart from 'components/buycart/buycart';
   import {Scroller} from 'vux';
+  import buyCart from 'components/buycart/buycart';
+  import cartCount from 'components/cartCount/cartCount';
   const ERR_OK = 0;
   export default{
     props: {
@@ -57,14 +64,16 @@
     },
     components: {
       buyCart,
-      Scroller
+      Scroller,
+      cartCount
     },
     data(){
       return {
         goods: [],
         scrollTop: 0,
         listHeight: [0],
-        minus: -200
+        minus: -200,
+        selectedFood: {}
       }
     },
     created(){
@@ -94,6 +103,16 @@
       fsScroll(pos){
         this.scrollTop = pos.top;
       },
+      addFood(target) {
+        this._drop(target);
+      },
+      _drop(target) {
+        // 体验优化,异步执行下落动画
+        this.$nextTick(() => {
+          //ref自带它组件下的属性与方法
+          this.$refs.buyCart.drop(target);
+        });
+      },
       _calculateHeight(){
         let goodList = this.$refs.goodHook;
         let height = 0;
@@ -109,11 +128,29 @@
       listClick(index){
         this.$refs.foodScroller.reset({top: this.listHeight[index]})
         this.scrollTop = this.listHeight[index];
-      }
+      },
+      addFood(target) {
+        this._drop(target);
+      },
+      _drop(target) {
+        // 体验优化,异步执行下落动画
+        this.$nextTick(() => {
+          this.$refs.buyCart.drop(target);
+        });
+      },
     },
     computed: {
+      selectedFoods(){
+        let foods = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            foods.push(food)
+          })
+        })
+        return foods;
+      },
       otherHeightCal(){
-          return (window.screen.width /7.5 * 8.8)
+        return (window.screen.width / 7.5 * 8.8)
       },
       currentIdx(){
         //因为有过渡动效,所以scrollTop计算会有延迟
@@ -197,6 +234,7 @@
         .foods-wrap
           list-style none
           .food
+            position relative
             display flex
             padding .36rem 0 0.36rem .36rem
             border-bottom .01rem solid #eee
@@ -229,16 +267,8 @@
                   text-decoration line-through
                   font-size .1rem
                   color #aaa
-              .el-icon-plus
+              .count-wrap
                 position absolute
-                right .3rem
-                font-size .3rem
-                line-height .5rem
-                width .5rem
-                text-align center
-                border-radius 50%
-                color white
-                background rgb(0, 160, 220)
-
-
+                bottom 10px
+                right 10px
 </style>

@@ -28,7 +28,7 @@ const webpackConfig = module.exports = {// 原来的 module.exports 代码赋值
       'components': resolve('/src/components'),
       'common': resolve('/src/common')
     },
-    enforceExtension:false
+    enforceExtension: false
   },
   module: {
     rules: [

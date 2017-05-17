@@ -17,8 +17,8 @@
           <span class="text">{{seller.supports[idx].description}}</span>
         </div>
       </div>
-      <div v-if="seller.supports" class="support-content">
-        <span class="count" @click="showDetail">
+      <div v-if="seller.supports" @click="showDetail" class="support-content">
+        <span class="count">
           {{seller.supports.length}}
         </span>
         <span class="el-icon-arrow-right"></span>
@@ -34,38 +34,40 @@
     <div class="bk">
       <img :src="seller.avatar">
     </div>
-    <div class="detail" v-if="seller" v-show="detailShow">
-      <div class="detail-wrap">
-        <div class="dt-main">
-          <h4 class="dt-title">{{seller.name}}</h4>
-          <div class="rateBox">
-            <el-rate
-              v-model="seller.foodScore"
-              allow-half
-              disabled
-              show-text
-              text-color="#ff9900"
-              text="['极差', '失望', '一般', '满意', '惊喜']"
-              text-template="{value}">
-            </el-rate>
-          </div>
-          <div class="privilege">
-            <h5 class="privilege-title">优惠信息</h5>
-            <ul class="privilege-list">
-              <li v-for="item in seller.supports">
-                <span class="icon" :class="classMap[item.type]"></span>
-                <span class="text">{{item.description}}</span>
-              </li>
-            </ul>
-          </div>
-          <div class="notice">
-            <h5 class="notice-title">商家公告</h5>
-            <span class="text">{{seller.bulletin}}</span>
+    <transition name="detail">
+      <div class="detail" v-if="seller" v-show="detailShow">
+        <div class="detail-wrap">
+          <div class="dt-main">
+            <h4 class="dt-title">{{seller.name}}</h4>
+            <div class="rateBox">
+              <el-rate
+                v-model="seller.foodScore"
+                allow-half
+                disabled
+                show-text
+                text-color="#ff9900"
+                text="['极差', '失望', '一般', '满意', '惊喜']"
+                text-template="{value}">
+              </el-rate>
+            </div>
+            <div class="privilege">
+              <h5 class="privilege-title">优惠信息</h5>
+              <ul class="privilege-list">
+                <li v-for="item in seller.supports">
+                  <span class="icon" :class="classMap[item.type]"></span>
+                  <span class="text">{{item.description}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="notice">
+              <h5 class="notice-title">商家公告</h5>
+              <span class="text">{{seller.bulletin}}</span>
+            </div>
           </div>
         </div>
+        <span class="el-icon-close" @click="showDetail"></span>
       </div>
-      <span class="el-icon-close" @click="showDetail"></span>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -314,4 +316,15 @@
         height .4rem
         margin .64rem auto 0 auto
         display block
+    .detail-enter-active{
+      transition all .3 ease;
+    }
+    .detail-enter-active{
+        transition:all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+      }
+    .detail-enter, .detail-leave-active {
+      transition all .8s
+      transform: translateX(10px);
+      opacity: 0;
+    }
 </style>
