@@ -159,7 +159,6 @@
             return false;
           }
         })
-        console.log(filter);
         return filter;
       },
       otherHeightCal(){

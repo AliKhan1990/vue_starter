@@ -49,7 +49,7 @@
               <div class="food" v-if="scope.row.count
               && scope.row.count!=0
               && scope.row.count!==undefined ">
-                <span class="name">{{scope.row.name}}</span>
+                <span class="name">{{scope.row.name.substr(0, 8)}}</span>
                 <div class="price">¥{{scope.row.price}}</div>
               </div>
             </template>
@@ -63,12 +63,14 @@
               <cartCount v-if="scope.row.count
                                && scope.row.count!=0
                                && scope.row.count!==undefined"
-                         :food="scope.row"></cartCount>
+                         :food="scope.row">
+              </cartCount>
             </template>
           </el-table-column>
         </el-table>
       </div>
     </transition>
+    <div class="list-mask" @click="toggleList" v-if="listFold"></div>
   </div>
 </template>
 
@@ -98,8 +100,8 @@
         type: [Number],
         default: 0
       },
-      galaxyFoods:{
-          type:Array
+      galaxyFoods: {
+        type: Array
       }
     },
     data(){
@@ -113,7 +115,7 @@
         ],
         dropBalls: [],
         listFold: false,
-        cartHaveThing:false
+        cartHaveThing: false
       }
     },
     methods: {
@@ -173,11 +175,11 @@
         }
       },
       cleanCart(column){
-          //handel current galaxy Data,Not its parent data-selectedFoods
-        if(column.columnKey=='clean' && this.totalCount>0){
-         this.galaxyFoods.forEach((food)=>{
-             food.count = 0;
-         })
+        //handel current galaxy Data,Not its parent data-selectedFoods
+        if (column.columnKey == 'clean' && this.totalCount > 0) {
+          this.galaxyFoods.forEach((food) => {
+            food.count = 0;
+          })
         }
       }
     },
@@ -308,18 +310,37 @@
           background: rgb(0, 160, 220)
           transition: all 0.4s linear
 
+  .list-mask
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    background: rgba(0, 0, 0, 0.3);
+    -webkit-filter blur(10px)
+    filter blur(10px)
+
   .shopcart-list
     width 100%
     position fixed
     bottom 1rem
+    z-index 40
+    .el-table__header-wrapper thead tr th:nth-of-type(1) div {
+      text-align center
+    }
+    .el-table__header-wrapper thead tr th:nth-of-type(2) div {
+      color indianred
+      text-align center
+    }
     .el-table__body-wrapper .el-table_1_column_2 .cell {
       padding-right 0
     }
     .food
       display flex
+      justify-content space-between
       .el-table .cell {
         white-space: normal;
-        /* word-break: break-all; */
         line-height: 24px;
       }
 
