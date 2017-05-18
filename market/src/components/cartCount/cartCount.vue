@@ -16,10 +16,8 @@
     props: ['food'],
     methods: {
       minusFood(){
-        if (this.food.count > 0) {
+        if (this.food.count) {
           this.food.count--;
-        } else {
-          this.food.count = 0
         }
       },
       addFood(){

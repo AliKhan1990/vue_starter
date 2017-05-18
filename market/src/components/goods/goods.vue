@@ -49,7 +49,7 @@
     <buy-cart ref="buyCart" :selected-foods='selectedFoods'
               :seller="seller"
               :delivery-price="seller.deliveryPrice"
-              :min-price="seller.minPrice">
+              :min-price="seller.minPrice" :galaxy-foods="galaxyFoods">
     </buy-cart>
   </el-row>
 </template>
@@ -148,6 +148,19 @@
           })
         })
         return foods;
+      },
+      galaxyFoods(){
+        let noFilter = this.selectedFoods;
+        let filter = [];
+        noFilter.forEach((food) => {
+          if (food.count) {
+            filter.push(food);
+          } else {
+            return false;
+          }
+        })
+        console.log(filter);
+        return filter;
       },
       otherHeightCal(){
         return (window.screen.width / 7.5 * 8.8)

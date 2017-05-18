@@ -31,6 +31,7 @@
       <div class="shopcart-list" v-show="listFold">
         <el-table
           :data="galaxyFoods"
+          show-overflow-tooltip
           stripe
           border
           style="width: 100%"
@@ -96,6 +97,9 @@
       minPrice: {
         type: [Number],
         default: 0
+      },
+      galaxyFoods:{
+          type:Array
       }
     },
     data(){
@@ -108,7 +112,8 @@
           {show: false}
         ],
         dropBalls: [],
-        listFold: false
+        listFold: false,
+        cartHaveThing:false
       }
     },
     methods: {
@@ -168,28 +173,15 @@
         }
       },
       cleanCart(column){
-        if(column.columnKey=='clean'){
-         this.selectedFoods.forEach((food)=>{
+          //handel current galaxy Data,Not its parent data-selectedFoods
+        if(column.columnKey=='clean' && this.totalCount>0){
+         this.galaxyFoods.forEach((food)=>{
              food.count = 0;
          })
         }
       }
     },
     computed: {
-      galaxyFoods(){
-        let noFilter = this.selectedFoods
-        let filter = [];
-        noFilter.forEach((food) => {
-          if (food.count) {
-            filter.push(food);
-          } else {
-            return;
-          }
-        })
-        console.log(filter);
-        return filter;
-
-      },
       totalPrice(){
         let total = 0;
         this.selectedFoods.forEach((food) => {
@@ -325,6 +317,11 @@
     }
     .food
       display flex
+      .el-table .cell {
+        white-space: normal;
+        /* word-break: break-all; */
+        line-height: 24px;
+      }
 
   /*购物和列表动画*/
   .cartList-enter-active {
