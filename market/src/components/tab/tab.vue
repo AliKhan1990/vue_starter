@@ -8,10 +8,10 @@
         <router-link to="/ratings">评论</router-link>
       </div>
       <div class="tab-item">
-        <router-link :seller="seller" to="/seller">商家</router-link>
+        <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view keep-live :seller="seller"></router-view>
+    <router-view keep-live :ratings="ratings" :seller="seller"></router-view>
   </div>
 </template>
 
@@ -24,19 +24,19 @@
       }
     },
     props:{
-      seller:Object
+      seller:{
+          type:Object
+      },
+      ratings:{
+          type:Array
+      }
     },
     methods: {
       sendTabsHeight(){
         let self = this;
         this.tabsHeight = this.$refs.tab.clientHeight;
         eventBus.$emit("sendFromTabs", self.tabsHeight);
-        //console.log("tab" + this.tabsHeight);
       }
-    },
-    mounted(){
-
-      this.sendTabsHeight();
     }
   }
 </script>

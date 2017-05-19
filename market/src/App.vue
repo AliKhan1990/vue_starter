@@ -2,7 +2,7 @@
   <div id="view">
     <v-intro v-on:enter="closeIntro" v-show="!intro"></v-intro>
     <v-header v-show="intro" :seller="seller"></v-header>
-    <v-tab v-show="intro" :seller="seller"></v-tab>
+    <v-tab v-show="intro" :seller="seller" :ratings="ratings"></v-tab>
   </div>
 </template>
 
@@ -15,17 +15,13 @@
     data(){
       return {
         seller: {},
-        headerHeight:0,
-        intro:true
+        ratings: [],
+        intro: true
       }
     },
     created(){
-      this.axios.get("/api/seller").then(res => {
-        res = res.data;
-        if (res.errno == ERR_OK) {
-          this.seller = res.data;
-        }
-      });
+      this.getSeller();
+      this.getRatings();
     },
     mounted(){
 
@@ -33,11 +29,27 @@
     components: {
       "v-header": header,
       "v-tab": tab,
-      'v-intro':intro
+      'v-intro': intro
     },
-    methods:{
+    methods: {
       closeIntro(){
-          this.intro = false
+        this.intro = false
+      },
+      getSeller(){
+        this.axios.get("/api/seller").then(res => {
+          res = res.data;
+          if (res.errno == ERR_OK) {
+            this.seller = res.data;
+          }
+        });
+      },
+      getRatings(){
+        this.axios.get("/api/ratings").then(res => {
+          res = res.data;
+          if (res.errno == ERR_OK) {
+            this.ratings = res.data;
+          }
+        });
       }
     }
   }

@@ -1,6 +1,5 @@
 <template>
-  <scroller class="grid-content" lock-x ref="sellerScroller" :scrollbarY='true' :height="otherHeightCal+'px'"
-            @on-scroll="fuckScroll">
+  <scroller class="grid-content" lock-x ref="sellerScroller" :scrollbarY='true' :height="otherHeightCal+'px'">
     <div class="seller">
       <div class="intro">
         <div class="intro-top">
@@ -102,19 +101,7 @@
         this._initScroll()
       }, 200)
     },
-    watch: {
-      'seller'() {
-        this.$nextTick(() => {
-          setTimeout(() => {
-            this._initScroll();
-          }, 200)
-        });
-      }
-    },
     methods: {
-      fuckScroll(){
-
-      },
       _initScroll(){
         this.$refs.sellerScroller.reset({top: 0})
       }

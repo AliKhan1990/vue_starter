@@ -26,8 +26,7 @@ var app = express()
 var appData = require('../external/data.json')
 var seller = appData.seller;
 var goods = appData.goods;
-var rating = appData.ratings;
-
+var ratings = appData.ratings;
 var apiRoutes = express.Router();
 
 //路由配置
@@ -48,7 +47,7 @@ apiRoutes.get('/goods',(req,res)=>{
 apiRoutes.get('/ratings',(req,res)=>{
   res.json({
     errno:0,
-    data:rating
+    data:ratings
   });
 });
 
