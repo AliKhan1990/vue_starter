@@ -14,9 +14,7 @@
           另需配送费¥{{deliveryPrice}}元
         </div>
       </div>
-      <div class="total-price" :class="{'payment':payClass==1}">
-        {{payDesc}}
-      </div>
+      <el-button type="text" @click="payConfirm" class="total-price" :class="{'payment':payClass==1}">{{payDesc}}</el-button>
       <div class="ball-wrap">
         <div v-for="ball in balls">
           <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
@@ -71,6 +69,27 @@
       </div>
     </transition>
     <div class="list-mask" @click="toggleList" v-if="listFold"></div>
+    <el-dialog
+      :modal-append-to-body="true"
+      top="15%"
+      title="支付"
+      :visible.sync="dialogVisible"
+      size="large"
+      >
+      <span>共支付{{totalPrice+deliveryPrice+1}}元。</span>
+      <div>
+        <h5>包含：</h5>
+        <ul>
+          <li>运费{{deliveryPrice}}元。</li>
+          <li>包装费2元。</li>
+        </ul>
+      </div>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">支 付</el-button>
+        </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -115,7 +134,8 @@
         ],
         dropBalls: [],
         listFold: false,
-        cartHaveThing: false
+        cartHaveThing: false,
+        dialogVisible: false,
       }
     },
     methods: {
@@ -181,15 +201,18 @@
             food.count = 0;
           })
         }
+      },
+      payConfirm(){
+        if(this.payClass==1 && this.totalPrice>=this.minPrice){
+          this.dialogVisible = true;
+        }
       }
     },
     computed: {
       totalPrice(){
         let total = 0;
-        this.selectedFoods.forEach((food) => {
-          if (food.count != undefined) {
+        this.galaxyFoods.forEach((food) => {
             total += food.price * food.count;
-          }
         })
         return total;
       },
@@ -218,8 +241,7 @@
         } else {
           return 1
         }
-      }
-
+      },
     }
   }
 </script>
@@ -289,13 +311,16 @@
         color: #fff
       }
       height: 100%
-      width 2.01rem
+      width 2.1rem
       font-size .24rem
       color rgba(255, 255, 255, 0.4)
       font-weight 700rem
       line-height .96rem
       background #2b333b
       text-align center
+      span
+        display: block;
+        line-height: 0rem;
     .ball-wrap
       .ball
         position: fixed
@@ -358,5 +383,8 @@
     transform: translateY(10px);
     opacity: 0;
   }
+  .el-message-box {
+      width 5rem
+    }
 
 </style>

@@ -85,23 +85,11 @@
     methods: {
       showDetail(){
         this.detailShow = !this.detailShow;
-      },
-      sendHeaderHeight(){
-        let self = this;
-        this.headerHeight = this.$refs.header.clientHeight;
-        bus.$emit("headerHeightEvent", self.headerHeight);
       }
     },
     created(){
       this.idx = 0;
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
-    },
-    mounted(){
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.sendHeaderHeight();
-        }, 0)
-      })
     }
   }
 </script>

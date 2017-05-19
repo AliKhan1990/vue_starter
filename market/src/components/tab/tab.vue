@@ -8,7 +8,7 @@
         <router-link to="/ratings">评论</router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/seller">商家</router-link>
+        <router-link :seller="seller" to="/seller">商家</router-link>
       </div>
     </div>
     <router-view keep-live :seller="seller"></router-view>
@@ -24,7 +24,7 @@
       }
     },
     props:{
-      seller:[Object]
+      seller:Object
     },
     methods: {
       sendTabsHeight(){
@@ -49,7 +49,7 @@
     height .85rem
     line-height .85rem
     font-size .25rem
-    border-1px(rgba(7, 17, 27, 0.1));
+    border-1px(rgba(7, 27, 37, 0.3));
     .tab-item
       flex 1
       text-align center
