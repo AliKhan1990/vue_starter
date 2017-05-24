@@ -148,6 +148,7 @@
       clickedFood(food){
         this.clickFood = food;
         this.$refs.food.show();
+        this.foodEnter = true;
       }
     },
     computed: {

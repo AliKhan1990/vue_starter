@@ -16,8 +16,9 @@
 
 <script type="text/ecmascript-6">
   const arr = [];
-  const POSITIVE = 1;
-  const NEGATIVE = 0;
+  const POSITIVE = 0;
+  const NEGATIVE = 1;
+  const WALL = 3.5;
   const ALL = 2;
   export default{
     data(){
@@ -52,23 +53,25 @@
     computed: {
       positive(){
         return this.ratings.filter((rating) => {
-          return rating.rateType = POSITIVE;
+          if(rating.rateType==POSITIVE){
+              return true;
+          }
         })
       },
       negative(){
         return this.ratings.filter((rating) => {
-          return rating.rateType = NEGATIVE;
+          if(rating.rateType==NEGATIVE){
+            return true;
+          }
         })
       }
     },
     methods: {
       selType(type){
-        this.selectType = type
-        this.$emit('ratingType.select', this.selectType)
+        this.$emit('select',type)
       },
       toggleContent(){
-        this.onlyContent = !this.onlyContent
-        this.$emit('content.toggle', this.onlyContent)
+        this.$emit('toggle')
       },
     }
   }

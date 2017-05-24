@@ -31,13 +31,18 @@
           </div>
           <div class="ratingsWrap">
             <h3 class="title">商品评价</h3>
-            <ratingSelect :ratings="food.ratings"
+            <ratingSelect @select="selectTypeEv"
+                          @toggle="contentToggleEv"
+                          :ratings="food.ratings"
                           :select-type="selectType"
                           :only-content="onlyContent"
                           :desc="desc"
             >
             </ratingSelect>
-            <ratingwrap :ratings="food.ratings"></ratingwrap>
+            <ratingwrap
+              :select-type="selectType"
+              :only-content="onlyContent"
+              :ratings="food.ratings"></ratingwrap>
           </div>
         </div>
       </scroller>
@@ -63,7 +68,7 @@
       return {
         showFlag: false,
         selectType: ALL,
-        onlyContent: true,
+        onlyContent: false,
         desc: {
           all: '全部',
           positive: '推荐',
@@ -75,25 +80,24 @@
 
     },
     mounted(){
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this._initScroll();
-        },100)
-      })
+
     },
-    computed:{
+    computed: {
       otherHeightCal(){
-        return ( window.screen.height -20)
+        return ( window.screen.height - 20)
       },
     },
     methods: {
       show(){
         this.showFlag = true;
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.$refs.scroller.reset();
+          }, 200)
+        })
       },
       toggleShow(){
-        console.log(this.showFlag);
         this.showFlag = !this.showFlag;
-        console.log(this.showFlag);
       },
       addToCart(event){
         Vue.set(this.food, 'count', 1)
@@ -102,8 +106,17 @@
       addFood(target) {
         this.$emit('add', target);
       },
-      _initScroll(){
-        this.$refs.scroller.reset({top: 10})
+      selectTypeEv(type){
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.$refs.scroller.reset();
+        })
+      },
+      contentToggleEv(){
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.$refs.scroller.reset();
+        })
       }
     },
     components: {

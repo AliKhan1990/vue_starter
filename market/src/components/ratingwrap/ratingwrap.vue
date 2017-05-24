@@ -1,7 +1,8 @@
 <template>
   <div class="wrap">
     <ul v-if="ratings">
-      <li class="rating" v-for="rating in ratings">
+      <li class="rating" v-for="rating in ratings"
+          v-show="needShow(rating.rateType,rating.text)">
         <div class="avatar">
           <img :src="rating.avatar" alt="">
         </div>
@@ -19,7 +20,7 @@
             </el-rate>
             <p v-if="rating.deliveryTime">用时{{rating.deliveryTime}}分钟送达</p>
           </div>
-          <i :class="[rating.rateType===0 ? 'el-icon-check':'el-icon-close']"></i>
+          <div class="gOrb" :class="[rating.rateType===0 ? 'good':'bad']"></div>
           <p class="text">
             {{rating.text}}
           </p>
@@ -36,9 +37,14 @@
 </template>
 
 <script type="text/ecmascript-6">
+  const POSITIVE = 1;
+  const NEGATIVE = 0;
+  const ALL = 2;
   export default{
     props: {
-      ratings: {}
+      ratings: {},
+      selectType:{},
+      onlyContent:{}
     },
     created(){
 
@@ -53,6 +59,16 @@
         let m = date.getMinutes() + ':';
         let s = date.getSeconds();
         return Y + M + D + h + m + s;
+      },
+      needShow(type, text){
+        if (this.onlyContent && !text) {
+          return false;
+        }
+        if (this.selectType === ALL) {
+          return true;
+        } else {
+          return type === this.selectType;
+        }
       }
     }
   }
@@ -78,6 +94,16 @@
       justify-content space-between
     .ratingBox
       width 100%
+      .gOrb
+        width .5rem
+        height .5rem
+        display inline-block
+        &.good
+          background url("./img/good.svg") no-repeat
+          background-size cover
+        &.bad
+          background url("./img/bad.svg") no-repeat
+          background-size cover
     .star
       .el-rate
         .el-rate__item

@@ -37,39 +37,51 @@
         </div>
       </div>
     </div>
-    <scroller ref="filterRating" lock-x class="satisficing">
+    <scroller ref="filterRating" lock-x class="satisficing" @on-scroll="onScroll">
       <div class="sbVux">
-        <div class="bar">
-          <el-button type="primary" @click="allRatings" size="mini">全部  {{ratingCount('all')}}</el-button>
-          <el-button type="success" @click="goodRatingsFilter" size="mini">满意  {{ratingCount('yes')}}</el-button>
-          <el-button type="warning" @click="badRatingsFilter" size="mini">不满意 {{ratingCount('no')}}</el-button>
-        </div>
-        <div class="have-text">
-          <el-button size="mini">
-            <i class="el-icon-check"></i>
-            只看有内容的评价
-          </el-button>
-        </div>
-        <div class="ratingsWrap" v-for="item in ratings">
-          <ratingwrap :rating="item"></ratingwrap>
-        </div>
+        <ratingSelect @select="selectTypeEv"
+                      @toggle="contentToggleEv"
+                      :ratings="ratings"
+                      :select-type="selectType"
+                      :only-content="onlyContent"
+                      :desc="desc"
+        ></ratingSelect>
+        <ratingwrap
+          :ratings="ratings"
+          :select-type="selectType"
+          :only-content="onlyContent"
+        >
+        </ratingwrap>
       </div>
     </scroller>
+    <div class="arrowTo" v-show="arrowTop" @click="toRatingTop">
+      <img src='./img/arrowTop.svg' alt="">
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import ratingwrap from 'components/ratingwrap/ratingwrap';
+  import ratingSelect from 'components/ratingSelect/ratingSelect'
   import {Scroller} from 'vux';
+  const ALL = 2;
   export default{
     data(){
       return {
-        ratingsFilter: []
+        selectType: ALL,
+        onlyContent: false,
+        desc: {
+          all: '全部',
+          positive: '推荐',
+          negative: '吐槽'
+        },
+        arrowTop: false
       }
     },
     components: {
       ratingwrap,
-      Scroller
+      Scroller,
+      ratingSelect
     },
     props: {
       seller: {
@@ -79,57 +91,46 @@
         type: Array
       }
     },
-    mounted(){
-      this.ratingsFilter = this.ratings;
-      setTimeout(() => {
-        this._initScroller()
-      }, 200)
+    created(){
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this._initScroller();
+        }, 100)
+      })
     },
     methods: {
-      ratingCount(kind){
-        let good = 0;
-        let bad = 0;
-        let all = good + bad;
-        if (kind == 'yes') {
-          this.ratings.forEach((rating) => {
-            if (rating.score >= 3.5) {
-              good++
-            }
-          })
-          return good;
-        } else if (kind == 'no') {
-          this.ratings.forEach((rating) => {
-            if (rating.score < 3.5) {
-              bad++
-            }
-          })
-          return bad;
+      onScroll(pos){
+        if (pos.top >= 10) {
+          this.arrowTop = true;
         } else {
-          this.ratings.forEach((rating) => {
-            if (rating.score) {
-              all++
-            }
-          })
-          return all;
+          this.arrowTop = false;
         }
-      },
-      allRatings(){
-        if (this.ratingsFilter.length == 0) {
-          this.ratingsFilter = this.ratings;
-        }else{
-
-        }
-      },
-      goodRatingsFilter(){
-        if (this.ratingsFilter.length == 0) {
-          this.ratingsFilter = this.ratings;
-        }
-      },
-      badRatingsFilter(){
-
       },
       _initScroller(){
-        this.$refs.filterRating.reset();
+        this.$refs.filterRating.reset({top:10});
+      },
+      selectTypeEv(type){
+        this.selectType = type;
+        this.$nextTick(() => {
+            setTimeout(()=>{
+              this.$refs.filterRating.reset();
+            },700)
+        })
+      },
+      contentToggleEv(){
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          setTimeout(()=>{
+            this.$refs.filterRating.reset();
+          },700)
+        })
+      },
+      toRatingTop(){
+        this.$refs.filterRating.reset({top: 0},300,'ease-in');
+        this.arrowTop = false;
+        setTimeout(()=>{
+          this.$refs.filterRating.reset();
+        },200)
       }
     }
   }
@@ -183,5 +184,15 @@
       border-bottom 1px solid #eee
     .sbVux
       padding .2rem
+
+  .arrowTo
+    position: fixed;
+    z-index: 100;
+    bottom: 1rem;
+    right: .5rem;
+    width: 1rem;
+    img
+      width 100%
+
 
 </style>
