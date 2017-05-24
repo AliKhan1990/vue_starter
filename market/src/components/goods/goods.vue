@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="5" class="menu-wrap">
-      <scroller class="grid-content" ref="menuScroller" lock-x :height="otherHeightCal+'px'">
+      <scroller class="grid-content" ref="menuScroller">
         <ul class="kinds-list">
           <li class="list-item" v-if="goods" v-for="(item,index) in goods"
               :class="{'current':currentIdx===index}"
@@ -14,7 +14,7 @@
       </scroller>
     </el-col>
     <el-col :span="19" class="foods-wrapper">
-      <scroller class="grid-content" ref="foodScroller" @on-scroll="fsScroll" lock-x :scrollbarY='true'>
+      <scroller class="grid-content" ref="foodScroller">
         <ul class="goods-list">
           <li class="good" ref="goodHook" v-for="item in goods">
             <h1 class="title">{{item.name}}</h1>
@@ -57,7 +57,6 @@
   </el-row>
 </template>
 <script type="text/ecmascript-6">
-  import {Scroller} from 'vux';
   import buyCart from 'components/buycart/buycart';
   import cartCount from 'components/cartCount/cartCount';
   import food from 'components/food/food'
@@ -68,7 +67,6 @@
     },
     components: {
       buyCart,
-      Scroller,
       cartCount,
       food
     },
@@ -104,11 +102,14 @@
           this._initScroll()
         }, 100)
       })
+      this.timer = setInterval(() => {
+        this.scrollTop = this.$refs.foodScroller.getPosition().top;
+      }, 50)
+    },
+    beforeDestroy(){
+      clearInterval(this.timer);
     },
     methods: {
-      fsScroll(pos){
-        this.scrollTop = pos.top;
-      },
       addFood(target) {
         this._drop(target);
       },
@@ -128,11 +129,11 @@
         }
       },
       _initScroll(){
-        this.$refs.menuScroller.reset({top: 0})
-        this.$refs.foodScroller.reset({top: 0})
+        this.$refs.menuScroller.resize()
+        this.$refs.foodScroller.resize()
       },
       listClick(index){
-        this.$refs.foodScroller.reset({top: this.listHeight[index]})
+        this.$refs.foodScroller.scrollTo(0, this.listHeight[index], false)
         this.scrollTop = this.listHeight[index];
       },
       addFood(target) {

@@ -1,121 +1,123 @@
 <template>
-  <scroller class="grid-content" lock-x ref="sellerScroller" :scrollbarY='true' :height="otherHeightCal+'px'">
-    <div class="seller">
-      <div class="intro">
-        <div class="intro-top">
-          <div class="title">
-            <h3>{{seller.name}}</h3>
-            <div class="rate">
-              <el-rate
-                v-model="seller.foodScore"
-                disabled
-                allow-half
-                show-text
-                text-color="#ff9900"
-                text-template="{value}">
-              </el-rate>
-              <span class="ratepeople">
-              ({{seller.ratingCount}}评价)
-            </span>
-              <span class="sellCount">月售{{seller.sellCount}}件</span>
+  <el-row class="sellerInfo">
+    <scroller ref="sellerScroller" >
+      <el-col :span="32" class="seller">
+        <div class="intro">
+          <div class="intro-top">
+            <div class="title">
+              <h3>{{seller.name}}</h3>
+              <div class="rate">
+                <el-rate
+                  v-model="seller.foodScore"
+                  disabled
+                  allow-half
+                  show-text
+                  text-color="#ff9900"
+                  text-template="{value}">
+                </el-rate>
+                <span class="ratepeople">
+        ({{seller.ratingCount}}评价)
+      </span>
+                <span class="sellCount">月售{{seller.sellCount}}件</span>
+              </div>
+            </div>
+            <div class="collect">
+              <i class="el-icon-star-off"></i>
             </div>
           </div>
-          <div class="collect">
-            <i class="el-icon-star-off"></i>
+          <div class="intro-bot">
+            <div class="start-price">
+              <span>起送价</span>
+              <div class="wp">
+                {{seller.minPrice}}
+                <span class="yuan">元</span>
+              </div>
+            </div>
+            <div class="carriage">
+              <span>商家配送</span>
+              <div class="wp">
+                {{seller.deliveryPrice}}
+                <span>元</span>
+              </div>
+            </div>
+            <div class="average-time">
+              <span>平均配送事件</span>
+              <div class="wp">
+                {{seller.deliveryTime}}
+                <span>分钟</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="intro-bot">
-          <div class="start-price">
-            <span>起送价</span>
-            <div class="wp">
-              {{seller.minPrice}}
-              <span class="yuan">元</span>
-            </div>
-          </div>
-          <div class="carriage">
-            <span>商家配送</span>
-            <div class="wp">
-              {{seller.deliveryPrice}}
-              <span>元</span>
-            </div>
-          </div>
-          <div class="average-time">
-            <span>平均配送事件</span>
-            <div class="wp">
-              {{seller.deliveryTime}}
-              <span>分钟</span>
-            </div>
-          </div>
+        <div class="notice">
+          <h3 class="title">
+            公告与活动
+          </h3>
+          <p>{{seller.bulletin}}</p>
+          <ul class="supports">
+            <li v-for="(support,index) in seller.supports">
+              <span class="icon" :class="classMap[support.type]"></span>
+              <p>{{support.description}}</p>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="notice">
-        <h3 class="title">
-          公告与活动
-        </h3>
-        <p>{{seller.bulletin}}</p>
-        <ul class="supports">
-          <li v-for="(support,index) in seller.supports">
-            <span class="icon" :class="classMap[support.type]"></span>
-            <p>{{support.description}}</p>
-          </li>
-        </ul>
-      </div>
-      <div class="picture">
-        <h3>商家实景</h3>
-        <el-carousel indicator-position class="picWrap" type="card" height="4rem">
-          <el-carousel-item v-for="item in seller.pics" :key="item">
-            <img :src="item" alt="">
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div class="more-info">
-        <h3>商家信息</h3>
-        <ul class="info">
-          <li v-for="item in seller.infos">{{item}}</li>
-        </ul>
-      </div>
-    </div>
-  </scroller>
+        <div class="picture">
+          <h3>商家实景</h3>
+          <el-carousel indicator-position class="picWrap" type="card" height="4rem">
+            <el-carousel-item v-for="item in seller.pics" :key="item">
+              <img :src="item" alt="">
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="more-info">
+          <h3>商家信息</h3>
+          <ul class="info">
+            <li v-for="item in seller.infos">{{item}}</li>
+          </ul>
+        </div>
+      </el-col>
+    </scroller>
+  </el-row>
 </template>
 
 <script type="text/ecmascript-6">
-  import {Scroller, Swiper, SwiperItem} from 'vux';
   export default{
     props: {
       seller: {}
     },
-    components: {
-      Scroller,
-      Swiper,
-      SwiperItem
-    },
+    components: {},
     data(){
       return {}
     },
     created(){
       this.idx = 0;
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this._initScroll()
+        }, 200)
+      })
     },
     mounted(){
-      setTimeout(() => {
-        this._initScroll()
-      }, 200)
+
+    },
+    computed:{
+//      calculateHeight(){
+//          return document.querySelector('.seller').clientHeight + 'px'
+//      }
     },
     methods: {
       _initScroll(){
-        this.$refs.sellerScroller.reset({top: 0})
+        this.$refs.sellerScroller.resize()
       }
-    },
-    computed: {
-      otherHeightCal(){
-        return (window.screen.width / 7.5 * 9.5 - window.screen.height +10)
-      },
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin"
+  .sellerInfo
+    height 9.7rem
   .seller
     height 100%
     & > div
