@@ -1,8 +1,8 @@
 <template>
   <div id="view">
-    <v-intro v-on:enter="closeIntro" v-show="!intro"></v-intro>
-    <v-header v-show="intro" :seller="seller"></v-header>
-    <v-tab v-show="intro" :seller="seller" :ratings="ratings"></v-tab>
+    <v-intro v-on:enter="closeIntro" v-show="intro"></v-intro>
+    <v-header v-show="!intro" :seller="seller"></v-header>
+    <v-tab v-show="!intro" :seller="seller" :ratings="ratings"></v-tab>
   </div>
 </template>
 
