@@ -14,7 +14,8 @@
           另需配送费¥{{deliveryPrice}}元
         </div>
       </div>
-      <el-button type="text" @click="payConfirm" class="total-price" :class="{'payment':payClass==1}">{{payDesc}}</el-button>
+      <el-button type="text" @click="payConfirm" class="total-price" :class="{'payment':payClass==1}">{{payDesc}}
+      </el-button>
       <div class="ball-wrap">
         <div v-for="ball in balls">
           <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
@@ -39,7 +40,7 @@
         >
           <el-table-column
             label="商品列表"
-            width="200"
+            :width="screenWidth*.65"
             column-key="list"
           >
             <!--item-->
@@ -55,13 +56,13 @@
           <!--ctrl-->
           <el-table-column
             label="清空"
-            width="120"
+            :width="screenWidth*.35"
             column-key="clean">
             <template scope="scope">
               <cartCount v-if="scope.row.count
                                && scope.row.count!=0
                                && scope.row.count!==undefined"
-                         :food="scope.row">
+                         :food="scope.row" @add="addFood">
               </cartCount>
             </template>
           </el-table-column>
@@ -75,8 +76,8 @@
       title="支付"
       :visible.sync="dialogVisible"
       size="large"
-      >
-      <span>共支付{{totalPrice+deliveryPrice+1}}元。</span>
+    >
+      <span>共支付{{totalPrice + deliveryPrice + 1}}元。</span>
       <div>
         <h5>包含：</h5>
         <ul>
@@ -140,6 +141,7 @@
     },
     methods: {
       drop(el) {
+        console.log(el);
         for (let i = 0; i < this.balls.length; i++) {
           let ball = this.balls[i];
           if (!ball.show) {
@@ -203,16 +205,19 @@
         }
       },
       payConfirm(){
-        if(this.payClass==1 && this.totalPrice>=this.minPrice){
+        if (this.payClass == 1 && this.totalPrice >= this.minPrice) {
           this.dialogVisible = true;
         }
       }
     },
     computed: {
+      screenWidth(){
+          return window.screen.width;
+      },
       totalPrice(){
         let total = 0;
         this.galaxyFoods.forEach((food) => {
-            total += food.price * food.count;
+          total += food.price * food.count;
         })
         return total;
       },
@@ -383,8 +388,9 @@
     transform: translateY(10px);
     opacity: 0;
   }
+
   .el-message-box {
-      width 5rem
-    }
+    width 5rem
+  }
 
 </style>

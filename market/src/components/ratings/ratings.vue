@@ -37,12 +37,12 @@
         </div>
       </div>
     </div>
-    <scroller  ref="filterRating" lock-x class="satisficing">
+    <scroller ref="filterRating" lock-x class="satisficing">
       <div class="sbVux">
         <div class="bar">
-          <el-button type="primary" size="mini">全部  {{ratingCount('all')}}</el-button>
-          <el-button type="success" size="mini">满意  {{ratingCount('yes')}}</el-button>
-          <el-button type="warning" size="mini">不满意 {{ratingCount('no')}}</el-button>
+          <el-button type="primary" @click="allRatings" size="mini">全部  {{ratingCount('all')}}</el-button>
+          <el-button type="success" @click="goodRatingsFilter" size="mini">满意  {{ratingCount('yes')}}</el-button>
+          <el-button type="warning" @click="badRatingsFilter" size="mini">不满意 {{ratingCount('no')}}</el-button>
         </div>
         <div class="have-text">
           <el-button size="mini">
@@ -60,14 +60,14 @@
 
 <script type="text/ecmascript-6">
   import ratingwrap from 'components/ratingwrap/ratingwrap';
-  import { Scroller } from 'vux';
+  import {Scroller} from 'vux';
   export default{
     data(){
       return {
-
+        ratingsFilter: []
       }
     },
-    components:{
+    components: {
       ratingwrap,
       Scroller
     },
@@ -80,6 +80,7 @@
       }
     },
     mounted(){
+      this.ratingsFilter = this.ratings;
       setTimeout(() => {
         this._initScroller()
       }, 200)
@@ -111,6 +112,21 @@
           })
           return all;
         }
+      },
+      allRatings(){
+        if (this.ratingsFilter.length == 0) {
+          this.ratingsFilter = this.ratings;
+        }else{
+
+        }
+      },
+      goodRatingsFilter(){
+        if (this.ratingsFilter.length == 0) {
+          this.ratingsFilter = this.ratings;
+        }
+      },
+      badRatingsFilter(){
+
       },
       _initScroller(){
         this.$refs.filterRating.reset();

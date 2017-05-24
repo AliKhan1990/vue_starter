@@ -1,28 +1,36 @@
 <template>
-  <div class="rating">
-    <div class="avatar">
-      <img :src="rating.avatar" alt="">
-    </div>
-    <div class="ratingBox">
-      <div class="userAndTime">
-        <div class="name">{{rating.username}}</div>
-        <time>{{formatDate(rating.rateTime)}}</time>
-      </div>
-      <div class="star">
-        <el-rate
-          v-model="rating.score"
-          disabled
-          text-color="#ff9900"
-          text-template="{value}">
-        </el-rate>
-        <p v-if="rating.deliveryTime">用时{{rating.deliveryTime}}分钟送达</p>
-      </div>
-      <p class="text">
-        {{rating.text}}
-      </p>
-      <div class="recommend">
-        <span v-for="item in rating.recommend">{{item}}</span>
-      </div>
+  <div class="wrap">
+    <ul v-if="ratings">
+      <li class="rating" v-for="rating in ratings">
+        <div class="avatar">
+          <img :src="rating.avatar" alt="">
+        </div>
+        <div class="ratingBox">
+          <div class="userAndTime">
+            <div class="name">{{rating.username}}</div>
+            <time>{{formatDate(rating.rateTime)}}</time>
+          </div>
+          <div class="star">
+            <el-rate
+              v-model="rating.score"
+              disabled
+              text-color="#ff9900"
+              text-template="{value}">
+            </el-rate>
+            <p v-if="rating.deliveryTime">用时{{rating.deliveryTime}}分钟送达</p>
+          </div>
+          <i :class="[rating.rateType===0 ? 'el-icon-check':'el-icon-close']"></i>
+          <p class="text">
+            {{rating.text}}
+          </p>
+          <div class="recommend">
+            <span v-for="item in rating.recommend">{{item}}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div v-else="!ratings" class="no-rating">
+      <p>暂无评论！亲，留下第一条评论吧～</p>
     </div>
   </div>
 </template>
@@ -30,22 +38,22 @@
 <script type="text/ecmascript-6">
   export default{
     props: {
-      rating: {}
+      ratings: {}
     },
-    methods:{
-        formatDate(time){
-          let date = new Date(time);
-          let Y = date.getFullYear() + '-';
-          let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-          let D = date.getDate() + ' ';
-          let h = date.getHours() + ':';
-          let m = date.getMinutes() + ':';
-          let s = date.getSeconds();
-          return Y+M+D+h+m+s;
-        }
+    created(){
+
     },
-    mounted(){
-        this.$emit('ready','_initScroller')
+    methods: {
+      formatDate(time){
+        let date = new Date(time);
+        let Y = date.getFullYear() + '-';
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        let D = date.getDate() + ' ';
+        let h = date.getHours() + ':';
+        let m = date.getMinutes() + ':';
+        let s = date.getSeconds();
+        return Y + M + D + h + m + s;
+      }
     }
   }
 </script>

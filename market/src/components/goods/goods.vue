@@ -21,20 +21,22 @@
             <ul class="foods-wrap">
               <li class="food" v-if="item.foods" v-for="food in item.foods">
                 <div class="icon">
-                  <img :src="food.icon" alt="食品">
+                  <img v-if="food.icon" :src="food.icon" alt="食品">
                 </div>
                 <div class="details">
-                  <h3 class="title">{{food.name}}</h3>
-                  <div class="desc">{{food.description}}</div>
-                  <span class="saled">月售{{food.sellCount}}份／</span>
-                  <span class="goodpin">好评{{food.rating}}%</span>
-                  <div class="price">
+                  <div @click="clickedFood(food)" :food="food" class="foodDetailWrap">
+                    <h3 class="title">{{food.name}}</h3>
+                    <div class="desc">{{food.description}}</div>
+                    <span class="saled">月售{{food.sellCount}}份／</span>
+                    <span class="goodpin">好评{{food.rating}}%</span>
+                    <div class="price">
                       <span class="now">
                         <span class="rmb">¥</span>{{food.price}}
                       </span>
-                    <span v-if="food.oldPrice" class="past">
+                      <span v-if="food.oldPrice" class="past">
                         <span class="rmb">¥</span>{{food.oldPrice}}
                       </span>
+                    </div>
                   </div>
                   <div class="count-wrap">
                     <cartCount @add="addFood" :food="food"></cartCount>
@@ -51,12 +53,14 @@
               :delivery-price="seller.deliveryPrice"
               :min-price="seller.minPrice" :galaxy-foods="galaxyFoods">
     </buy-cart>
+    <food :food="clickFood" @add="addFood" ref="food"></food>
   </el-row>
 </template>
 <script type="text/ecmascript-6">
   import {Scroller} from 'vux';
   import buyCart from 'components/buycart/buycart';
   import cartCount from 'components/cartCount/cartCount';
+  import food from 'components/food/food'
   const ERR_OK = 0;
   export default{
     props: {
@@ -65,7 +69,8 @@
     components: {
       buyCart,
       Scroller,
-      cartCount
+      cartCount,
+      food
     },
     data(){
       return {
@@ -73,7 +78,8 @@
         scrollTop: 0,
         listHeight: [0],
         minus: -200,
-        selectedFood: {}
+        selectedFood: {},
+        clickFood: {}
       }
     },
     created(){
@@ -109,7 +115,7 @@
       _drop(target) {
         // 体验优化,异步执行下落动画
         this.$nextTick(() => {
-          //ref自带它组件闲的
+          //ref自带它组件
           this.$refs.buyCart.drop(target);
         });
       },
@@ -130,6 +136,7 @@
         this.scrollTop = this.listHeight[index];
       },
       addFood(target) {
+        console.log(target);
         this._drop(target);
       },
       _drop(target) {
@@ -138,6 +145,10 @@
           this.$refs.buyCart.drop(target);
         });
       },
+      clickedFood(food){
+        this.clickFood = food;
+        this.$refs.food.show();
+      }
     },
     computed: {
       selectedFoods(){
