@@ -16,7 +16,8 @@
                 disabled
                 show-text
                 text-color="#ff9900"
-                text-template="{value}">
+                text-template="{value}"
+              >
               </el-rate>
             </li>
             <li>
