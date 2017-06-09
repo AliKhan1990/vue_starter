@@ -23,4 +23,11 @@ npm run build --report
 
 ## 项目说明
     分支：master使用vux开发，但是scroller组件有很多坑，而且已经不在维护所以放弃。
+    
+### 前端部分
+* 移动设备兼容: rem处理兼容问题
+* axios做ajax请求
+### TODO:
+  使用mint-ui重构
+  使用Vuex组件通讯
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
