@@ -28,6 +28,7 @@ npm run build --report
 * 移动设备兼容: rem处理兼容问题
 * axios做ajax请求
 ### TODO:
-  使用mint-ui重构
-  使用Vuex组件通讯
+    - 使用mint-ui重构
+    - 使用Vuex组件通讯
+    
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
